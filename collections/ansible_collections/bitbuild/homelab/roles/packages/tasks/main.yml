@@ -1,0 +1,22 @@
+# SPDX-License-Identifier: Apache-2.0
+---
+# tasks file for packages
+
+- name: Gather facts subset - os_family
+  ansible.builtin.setup:
+    gather_subset:
+      - "!all"
+      - "!min"
+      - os_family
+  become: true
+
+- name: Update package cache
+  ansible.builtin.include_tasks:
+    file: "update-cache-{{ ansible_facts.os_family }}.yml"
+
+- name: Install packages
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ packages_install_list }}"
+  become: true

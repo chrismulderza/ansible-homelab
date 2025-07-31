@@ -1,0 +1,5 @@
+---
+- name: Update apt cache
+  ansible.builtin.dnf:
+    update_cache: true
+  become: true

@@ -1,0 +1,68 @@
+# Playbook to bootstrap new hosts to be managed by Ansible.
+# Ansible user "should" be provisionined at install time, but
+# this is not always possible. Use this playbook to create an
+# Ansible user, and set correct capabilities. Invoke with the
+# `ansible-playkook -K` option.
+# TODO: Convert this to a role.
+---
+- name: Bootstrap Ansible hosts
+  hosts: unmanaged
+  become: true
+  become_user: root
+
+  tasks:
+    - name: Install required packages
+      ansible.builtin.import_role:
+        name: bitbuild.homelab.packages
+
+    - name: Create default Ansible user.
+      ansible.builtin.user:
+        state: present
+        name: ansible
+        comment: "Ansible User"
+        uid: 32768
+        group: root
+        home: /etc/ansible
+        create_home: true
+
+    - name: Ensure correct permissions on ansible home
+      ansible.builtin.file:
+        name: /etc/ansible
+        state: directory
+        owner: ansible
+        group: root
+        recurse: true
+        mode: "750"
+
+    - name: Ensure correct permissions on ansible .ssh
+      ansible.builtin.file:
+        name: /etc/ansible/.ssh
+        state: directory
+        owner: ansible
+        group: root
+        recurse: false
+        mode: "700"
+
+    - name: Add ansible authorized key
+      ansible.posix.authorized_key:
+        state: present
+        user: ansible
+        key: "{{ lookup('file', ansible_ssh_public_key_file) }}"
+
+    - name: Ensure correct permissions on ansible authorized_keys
+      ansible.builtin.file:
+        name: /etc/ansible/.ssh/authorized_keys
+        state: file
+        owner: ansible
+        group: root
+        recurse: false
+        mode: "600"
+
+    - name: Add ansible user to sudoers
+      ansible.builtin.copy:
+        content: "ansible ALL=(ALL) NOPASSWD: ALL"
+        dest: "/etc/sudoers.d/ansible"
+        mode: "0440"
+        owner: root
+        group: root
+        validate: "/usr/sbin/visudo -cf %s" # Validates syntax before applying
