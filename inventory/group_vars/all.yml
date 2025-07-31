@@ -1,0 +1,36 @@
+---
+ansible_user: ansible
+ansible_ssh_private_key_file: /private/ansible.key
+ansible_ssh_public_key_file: /private/ansible.key.pub
+ansible_user_uid: 32768
+admin_user_name: sysop
+admin_user_uid: 8000
+admin_user_gid: 8000
+network:
+  default_domain: bitbuild.io
+  default_ntp_server: ntp.bitbuild.io
+  subnets:
+    LAN:
+      name: LAN
+      domain: lan.bitbuild.io
+      vlan_id: 10
+      ipv4_cidr: 192.168.10.0/24
+      ipv4_netmask: 255.255.255.0
+    INFRA:
+      name: INFRA
+      domain: infra.bitbuild.io
+      vlan_id: 1
+      ipv4_cidr: 192.168.0.0/24
+      ipv4_netmask: 255.255.255.192
+
+  subnet:
+    - name: LAN
+      domain: lan.bitbuild.io
+      vlan_id: 10
+      ipv4_cidr: 192.168.10.0/24
+      ipv4_netmask: 255.255.255.0
+    - name: INFRA
+      domain: infra.bitbuild.io
+      vlan_id: 1
+      ipv4_cidr: 192.168.0.0/26
+      ipv4_netmask: 255.255.255.192

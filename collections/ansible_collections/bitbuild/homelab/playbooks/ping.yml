@@ -1,0 +1,9 @@
+# Used for testing
+---
+- name: Ping diagnostics play
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Ansible ping host
+      ansible.builtin.ping:

@@ -1,0 +1,73 @@
+{
+  "name": "fedora-ansible-devcontainer-ee",
+  "image": "quay.io/chrismulderssa/fedora-ansible-devcontainer-ee:1.0",
+  "mounts": ["source=${env:HOME}/private,target=/private,type=bind"],
+  "containerUser": "ansible",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/ansible/src/${localWorkspaceFolderBasename},type=bind,consistency=cached",
+  "workspaceFolder": "/workspace/ansible/src/${localWorkspaceFolderBasename}",
+  "runArgs": [
+    "--cap-add=CAP_MKNOD",
+    "--cap-add=NET_ADMIN",
+    "--cap-add=SYS_ADMIN",
+    "--cap-add=SYS_RESOURCE",
+    "--device",
+    "/dev/fuse",
+    "--security-opt",
+    "seccomp=unconfined",
+    "--security-opt",
+    "label=disable",
+    "--security-opt",
+    "apparmor=unconfined",
+    "--security-opt",
+    "unmask=/sys/fs/cgroup",
+    "--userns=host",
+    "--hostname=ansible-dev-container"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.ansible",
+        "dhoeric.ansible-vault",
+        "donjayamanne.githistory",
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        "oderwat.indent-rainbow",
+        "esbenp.prettier-vscode",
+        "samuelcolvin.jinjahtml",
+        "tamasfe.even-better-toml",
+        "yzhang.markdown-all-in-one",
+        "bierner.markdown-preview-github-styles",
+        "DavidAnson.vscode-markdownlint",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+        "ms-python.isort"
+      ],
+      "settings": {
+        "[json]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[jsonc]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[markdown]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode"
+        },
+        "[python]": {
+          "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+          }
+        },
+        "ansible.python.interpreterPath": "/workspace/ansible/bin/python3",
+        "editor.formatOnSave": true,
+        "files.associations": {
+          "*.j2": "ansible-jinja",
+          "*.yml": "ansible"
+        },
+        "files.trimFinalNewlines": true,
+        "files.trimTrailingWhitespace": true,
+        "python.defaultInterpreterPath": "/workspace/ansible/bin/python3"
+      }
+    }
+  },
+  "remoteUser": "ansible"
+}
